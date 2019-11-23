@@ -7,9 +7,7 @@ const PercentScreen: () => React$Node = () => {
   return (
     <>
       <SafeAreaView>
-        <View
-          contentInsetAdjustmentBehavior="automatic"
-          style={styles.scrollView}>
+        <View>
           <Text>Percent Screen!</Text>
         </View>
       </SafeAreaView>

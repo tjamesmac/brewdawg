@@ -75,7 +75,6 @@ const HomeScreen: () => React$Node = props => {
               title="Go to Home"
               onPress={() => props.navigation.navigate('Extra')}
             />
-            {/* <NestedNav /> */}
             {/* <SwipeGesture
               gestureStyle={styles.swipesGestureContainer}
               onSwipePerformed={onSwipePerformed}>
