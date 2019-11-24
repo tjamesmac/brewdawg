@@ -123,36 +123,36 @@ const BrewScreen: () => React$Node = props => {
     }
     console.log(food_pairing, 'null check');
     return (
-      // <Modal animationType="slide" transparent={true} visible={isModalVisible}>
-      <View style={styles.modalContainer}>
-        <View>
-          <View style={styles.modalBody}>
-            <TouchableHighlight
-              style={styles.modalClose}
-              onPress={() => {
-                setIsModalVisible(!isModalVisible);
-              }}>
-              <Text style={styles.modalCloseText}>CLOSE</Text>
-            </TouchableHighlight>
-            <View style={styles.itemBody}>
-              <View style={styles.itemInfo}>
-                <ScrollView>
-                  <Text style={styles.itemName}>{name}</Text>
-                  <Text style={styles.itemText}>{tagline}</Text>
-                  <Text style={styles.itemText}>{abv}</Text>
-                  <Text style={styles.itemText}>{description}</Text>
-                  <Text style={styles.itemText}>Pairs with:</Text>
-                  {food}
-                </ScrollView>
-              </View>
-              <View style={styles.itemImageContainer}>
-                <Image style={styles.itemImage} source={{uri: imageURL}} />
+      <Modal animationType="slide" transparent={true} visible={isModalVisible}>
+        <View style={styles.modalContainer}>
+          <View>
+            <View style={styles.modalBody}>
+              <TouchableHighlight
+                style={styles.modalClose}
+                onPress={() => {
+                  setIsModalVisible(!isModalVisible);
+                }}>
+                <Text style={styles.modalCloseText}>CLOSE</Text>
+              </TouchableHighlight>
+              <View style={styles.itemBody}>
+                <View style={styles.itemInfo}>
+                  <ScrollView>
+                    <Text style={styles.itemHeading}>{name}</Text>
+                    <Text style={styles.itemSubHeading}>{tagline}</Text>
+                    <Text style={styles.itemTextsmaller}>ABV: {abv}</Text>
+                    <Text style={styles.itemDescription}>{description}</Text>
+                    <Text style={styles.itemSubHeading}>Pairs with:</Text>
+                    {food}
+                  </ScrollView>
+                </View>
+                <View style={styles.itemImageContainer}>
+                  <Image style={styles.itemImage} source={{uri: imageURL}} />
+                </View>
               </View>
             </View>
           </View>
         </View>
-      </View>
-      // </Modal>
+      </Modal>
     );
   };
   let renderModal;
@@ -166,7 +166,6 @@ const BrewScreen: () => React$Node = props => {
           contentInsetAdjustmentBehavior="automatic"
           style={styles.container}>
           {renderModal}
-          {/* <CustomModal itemInformation={obj} /> */}
           <SwipeGesture
             gestureStyle={styles.swipesGestureContainer}
             onSwipePerformed={onSwipePerformed}>
@@ -183,14 +182,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
-
   modalContainer: {
-    // marginTop: 100,
     backgroundColor: 'rgba(100,100,100, 0.5)',
-    // alignItems: 'center',
     padding: 35,
     height: '100%',
-    // flex: 1,
   },
   modalBody: {
     position: 'relative',
@@ -218,7 +213,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   itemBody: {
-    // flex: 1,
     justifyContent: 'center',
     flexDirection: 'row',
     padding: 30,
@@ -233,24 +227,38 @@ const styles = StyleSheet.create({
     borderColor: 'black',
     width: 50,
     height: 100,
-    padding: 5,
+    padding: 45,
     backgroundColor: 'white',
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
     borderRadius: 15,
     marginTop: 20,
     marginLeft: 20,
-    // alignSelf: 'center',
   },
   itemImage: {
     width: 75,
     height: 75,
     resizeMode: 'contain',
   },
-  itemName: {
+  itemHeading: {
     fontSize: 20,
     fontWeight: 'bold',
+    color: 'white',
+  },
+  itemSubHeading: {
+    paddingTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  itemTextsmaller: {
+    fontSize: 12,
+    // fontWeight: 'bold',
+    color: 'white',
+  },
+  itemDescription: {
+    paddingTop: 12,
+    fontSize: 14,
     color: 'white',
   },
   itemText: {
