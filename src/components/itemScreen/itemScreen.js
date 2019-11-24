@@ -16,8 +16,6 @@ import {
   renderItems,
 } from './itemScreen.helpers';
 
-import {Colors} from 'react-native/Libraries/NewAppScreen';
-
 // TODO: Add up down/swipe gesture
 // Add modal
 // colour navigation
@@ -113,40 +111,45 @@ const BrewScreen: () => React$Node = props => {
     console.log(image_url);
     let imageURL = image_url;
     const placeHolder = 'https://images.punkapi.com/v2/keg.png';
+    const food = food_pairing.map((item, index) => {
+      return (
+        <Text style={styles.itemText} key={index + ' food'}>
+          {item}
+        </Text>
+      );
+    });
     if (image_url === null) {
       imageURL = placeHolder;
     }
-    console.log(imageURL, 'null check');
+    console.log(food_pairing, 'null check');
     return (
       // <Modal animationType="slide" transparent={true} visible={isModalVisible}>
-      // {/* // <View style={styles.modalContainer}> */}
       <View style={styles.modalContainer}>
-        {/* <ScrollView contentContainerStyle={styles.modalBody}> */}
-        {/* <ScrollView> */}
-        <View style={styles.modalBody}>
-          {/* <ScrollView contentContainerStyle={styles.scrollViewBody}> */}
-          <TouchableHighlight
-            style={styles.modalClose}
-            onPress={() => {
-              setIsModalVisible(!isModalVisible);
-            }}>
-            <Text style={styles.modalCloseText}>CLOSE</Text>
-          </TouchableHighlight>
-          <View style={styles.itemBody}>
-            <View style={styles.itemInfo}>
-              <ScrollView>
-                <Text style={styles.itemName}>{name}</Text>
-                <Text>{tagline}</Text>
-                <Text>{abv}</Text>
-                <Text>{description}</Text>
-                <Text>{food_pairing}</Text>
-              </ScrollView>
-            </View>
-            <View style={styles.itemImageContainer}>
-              <Image style={styles.itemImage} source={{uri: imageURL}} />
+        <View>
+          <View style={styles.modalBody}>
+            <TouchableHighlight
+              style={styles.modalClose}
+              onPress={() => {
+                setIsModalVisible(!isModalVisible);
+              }}>
+              <Text style={styles.modalCloseText}>CLOSE</Text>
+            </TouchableHighlight>
+            <View style={styles.itemBody}>
+              <View style={styles.itemInfo}>
+                <ScrollView>
+                  <Text style={styles.itemName}>{name}</Text>
+                  <Text style={styles.itemText}>{tagline}</Text>
+                  <Text style={styles.itemText}>{abv}</Text>
+                  <Text style={styles.itemText}>{description}</Text>
+                  <Text style={styles.itemText}>Pairs with:</Text>
+                  {food}
+                </ScrollView>
+              </View>
+              <View style={styles.itemImageContainer}>
+                <Image style={styles.itemImage} source={{uri: imageURL}} />
+              </View>
             </View>
           </View>
-          {/* </ScrollView> */}
         </View>
       </View>
       // </Modal>
@@ -180,35 +183,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     height: '100%',
   },
+
   modalContainer: {
     // marginTop: 100,
     backgroundColor: 'rgba(100,100,100, 0.5)',
-    alignItems: 'center',
+    // alignItems: 'center',
     padding: 35,
-    // height: '100%',
+    height: '100%',
+    // flex: 1,
   },
   modalBody: {
     position: 'relative',
-    // width: 350,
-    // padding: 50,
-    // height: 400,
-    // flex: 1,
-    // flexBasis: 'auto',
     alignSelf: 'baseline',
     backgroundColor: '#333',
     alignItems: 'center',
-    // justifyContent: 'center',
     borderRadius: 20,
     flexGrow: 1,
     marginTop: 50,
   },
   scrollViewBody: {
     alignSelf: 'baseline',
-    // backgroundColor: '#333',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // borderRadius: 20,
-    // flexGrow: 1,
     marginTop: 50,
   },
   modalClose: {
@@ -254,6 +248,14 @@ const styles = StyleSheet.create({
     height: 75,
     resizeMode: 'contain',
   },
+  itemName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  itemText: {
+    color: 'white',
+  },
   swipesGestureContainer: {
     // flex: 1,
     // width: '100%',
@@ -267,7 +269,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     width: '100%',
-    marginTop: 450,
+    // marginTop: 450,
     justifyContent: 'space-between',
     paddingLeft: 15,
     paddingRight: 15,
