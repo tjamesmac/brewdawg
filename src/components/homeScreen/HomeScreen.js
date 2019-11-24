@@ -17,7 +17,7 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-import NestedNav from '../brewScreen/nestedNav';
+import NestedNav from '../itemScreen/nestedNav';
 
 import SwipeGesture from '../swipe/swipeGesture';
 
