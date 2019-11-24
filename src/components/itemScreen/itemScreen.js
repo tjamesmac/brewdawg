@@ -27,13 +27,6 @@ const BrewScreen: () => React$Node = props => {
   const [currentPage, setCurrentPage] = React.useState(8);
   const [APIpage, setAPIpage] = React.useState(1);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
-  // const initialModalState = {
-  //   name: 'null',
-  //   tag: 'null',
-  //   abv: 'null',
-  //   description: 'null',
-  //   food: 'null',
-  // };
   const [modalData, setModalData] = React.useState(null);
 
   function onSwipePerformed(action) {
