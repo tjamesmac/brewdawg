@@ -17,7 +17,7 @@ import Items from './itemScreen/itemScreen';
 
 const tabBarOptions = {
   style: {
-    backgroundColor: 'red',
+    backgroundColor: '#e60000',
     // borderRadius: 20,
     color: 'black',
   },
@@ -30,7 +30,7 @@ const tabBarOptions = {
   indicatorStyle: {
     height: '100%',
     color: 'white',
-    backgroundColor: 'gray',
+    backgroundColor: '#333',
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
   },
@@ -38,11 +38,11 @@ const tabBarOptions = {
 const secondaryTabBarOptions = {
   style: {
     alignItems: 'stretch',
-    backgroundColor: 'darkgrey',
+    backgroundColor: '#333',
   },
   indicatorStyle: {
     // height: '100%',
-    backgroundColor: 'darkgrey',
+    backgroundColor: '#333',
     borderRadius: 5,
   },
   tabStyle: {
