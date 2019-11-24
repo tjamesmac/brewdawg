@@ -7,6 +7,7 @@ import {
   Text,
   TouchableHighlight,
   Image,
+  ScrollView,
 } from 'react-native';
 import SwipeGesture from '../swipe/swipeGesture';
 import {
@@ -117,15 +118,13 @@ const BrewScreen: () => React$Node = props => {
     }
     console.log(imageURL, 'null check');
     return (
-      // <Modal
-      //   animationType="slide"
-      //   transparent={true}
-      //   visible={true}
-      //   onRequestClose={() => {
-      //     // Alert.alert('Modal has been closed.');
-      //   }}>
+      // <Modal animationType="slide" transparent={true} visible={isModalVisible}>
+      // {/* // <View style={styles.modalContainer}> */}
       <View style={styles.modalContainer}>
+        {/* <ScrollView contentContainerStyle={styles.modalBody}> */}
+        {/* <ScrollView> */}
         <View style={styles.modalBody}>
+          {/* <ScrollView contentContainerStyle={styles.scrollViewBody}> */}
           <TouchableHighlight
             style={styles.modalClose}
             onPress={() => {
@@ -133,21 +132,21 @@ const BrewScreen: () => React$Node = props => {
             }}>
             <Text style={styles.modalCloseText}>CLOSE</Text>
           </TouchableHighlight>
-          <View styles={styles.itemBody}>
-            <View styles={styles.itemInfo}>
-              {/* <Text style={styles.itemName}>{name}</Text>
-              <Text>{tagline}</Text>
-              <Text>{abv}</Text>
-              <Text>{description}</Text>
-              <Text>{food_pairing}</Text> */}
-            </View>
-            <View styles={styles.itemImageContainer}>
-              <Text>was</Text>
+          <View style={styles.itemBody}>
+            <View style={styles.itemInfo}>
+              <ScrollView>
+                <Text style={styles.itemName}>{name}</Text>
+                <Text>{tagline}</Text>
+                <Text>{abv}</Text>
+                <Text>{description}</Text>
+                <Text>{food_pairing}</Text>
+              </ScrollView>
             </View>
             <View style={styles.itemImageContainer}>
-              {/* <Image style={styles.itemImage} source={{uri: imageURL}} /> */}
+              <Image style={styles.itemImage} source={{uri: imageURL}} />
             </View>
           </View>
+          {/* </ScrollView> */}
         </View>
       </View>
       // </Modal>
@@ -182,21 +181,35 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   modalContainer: {
-    marginTop: 100,
+    // marginTop: 100,
     backgroundColor: 'rgba(100,100,100, 0.5)',
-    // backgroundColor: 'grey',
-    flex: 1,
     alignItems: 'center',
-    // justifyContent: 'center',
+    padding: 35,
+    // height: '100%',
   },
   modalBody: {
     position: 'relative',
-    width: 250,
-    height: 200,
+    // width: 350,
+    // padding: 50,
+    // height: 400,
+    // flex: 1,
+    // flexBasis: 'auto',
+    alignSelf: 'baseline',
     backgroundColor: '#333',
     alignItems: 'center',
-    justifyContent: 'center',
+    // justifyContent: 'center',
     borderRadius: 20,
+    flexGrow: 1,
+    marginTop: 50,
+  },
+  scrollViewBody: {
+    alignSelf: 'baseline',
+    // backgroundColor: '#333',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // borderRadius: 20,
+    // flexGrow: 1,
+    marginTop: 50,
   },
   modalClose: {
     position: 'absolute',
@@ -211,28 +224,34 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   itemBody: {
-    flex: 1,
+    // flex: 1,
     justifyContent: 'center',
-    // borderWidth: 1,
-    // borderColor: 'red',
     flexDirection: 'row',
+    padding: 30,
+    alignSelf: 'baseline',
   },
   itemInfo: {
-    borderWidth: 1,
-    borderColor: 'red',
     flex: 1,
     width: 50,
-    height: 50,
   },
   itemImageContainer: {
     borderWidth: 1,
     borderColor: 'black',
-    width: 125,
-    height: 125,
+    width: 50,
+    height: 100,
+    padding: 5,
+    backgroundColor: 'white',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 15,
+    marginTop: 20,
+    marginLeft: 20,
+    // alignSelf: 'center',
   },
   itemImage: {
-    width: 125,
-    height: 125,
+    width: 75,
+    height: 75,
     resizeMode: 'contain',
   },
   swipesGestureContainer: {
