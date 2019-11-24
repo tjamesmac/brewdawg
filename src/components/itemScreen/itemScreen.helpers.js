@@ -29,7 +29,7 @@ export function decreasePagination(currentPage) {
 }
 
 export function renderItems(itemRequirements) {
-  let {currentPage, data, styles} = itemRequirements;
+  const {currentPage, data, styles, handleClick} = itemRequirements;
   const pageRange = data.slice(currentPage - 8, currentPage + 1);
 
   const items = pageRange.map((item, index) => {
@@ -39,13 +39,16 @@ export function renderItems(itemRequirements) {
       imageURL = placeHolder;
     }
     return (
-      <View key={item.id} style={styles.beer}>
+      <TouchableOpacity
+        onPress={() => handleClick(item.id)}
+        key={item.id}
+        style={styles.beer}>
         <View style={styles.imageContainer}>
           <Image style={styles.beerImage} source={{uri: imageURL}} />
         </View>
         <Text>{item.name}</Text>
         <Text>{item.abv} ABV</Text>
-      </View>
+      </TouchableOpacity>
     );
   });
   return items;
