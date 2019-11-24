@@ -31,7 +31,7 @@ class SwipeGesture extends Component {
       <Animated.View
         {...this.PanResponder.panHandlers}
         style={this.props.gestureStyle}>
-        <View>{this.props.children}</View>
+        <>{this.props.children}</>
       </Animated.View>
     );
   }
