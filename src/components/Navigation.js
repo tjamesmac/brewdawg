@@ -13,38 +13,36 @@ import SearchScreen from './searchScreen/searchScreen';
 /*
  Secondary navigation
 */
-import Home from './brewScreen/brewScreen';
+import Items from './itemScreen/itemScreen';
 
 const tabBarOptions = {
   style: {
-    // backgroundColor: 'red',
-    borderRadius: 20,
+    backgroundColor: 'red',
+    // borderRadius: 20,
+    color: 'black',
   },
-  labelStyle: {},
+  labelStyle: {
+    color: 'black',
+  },
   tabStyle: {
-    // backgroundColor: 'blue',
-    // width: 100,
-    // marginRight: 10,
-    // paddingRight: 10,
     borderRadius: 25,
   },
   indicatorStyle: {
     height: '100%',
-    // width: 150,
-    // backgroundColor: 'gray',
+    color: 'white',
+    backgroundColor: 'gray',
     borderTopRightRadius: 15,
     borderTopLeftRadius: 15,
-    // borderBottomWidth: 5,
-    // borderBottomColor: 'white',
   },
 };
 const secondaryTabBarOptions = {
   style: {
     alignItems: 'stretch',
+    backgroundColor: 'darkgrey',
   },
   indicatorStyle: {
     // height: '100%',
-    // backgroundColor: 'orange',
+    backgroundColor: 'darkgrey',
     borderRadius: 5,
   },
   tabStyle: {
@@ -56,9 +54,9 @@ const secondaryTabBarOptions = {
 
 const SecondaryNavigator = createMaterialTopTabNavigator(
   {
-    All: Home,
-    Pizza: Home,
-    Steak: Home,
+    All: Items,
+    // Pizza: Items,
+    // Steak: Items,
   },
   {
     tabBarOptions: secondaryTabBarOptions,
