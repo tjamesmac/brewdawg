@@ -8,7 +8,7 @@ const NavigationContainer = createAppContainer(Navigation);
 function Head() {
   return (
     <View style={styles.header}>
-      <Text>BrewDawg</Text>
+      <Text style={styles.headerText}>BrewDawg</Text>
     </View>
   );
 }
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 50,
     paddingBottom: 10,
-    backgroundColor: 'red',
+    backgroundColor: '#e60000',
     fontWeight: 'bold',
   },
   headerText: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   navContainer: {
-    backgroundColor: 'red',
+    backgroundColor: '#e60000',
   },
 });
 export default App;
