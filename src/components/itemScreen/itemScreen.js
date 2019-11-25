@@ -1,12 +1,12 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
 import RNShake from 'react-native-shake';
+
 import SwipeGesture from '../swipe/swipeGesture';
 import {
   increasePagination,
   decreasePagination,
   renderItems,
-  getBeers,
 } from './itemScreen.helpers';
 import CustomModal from '../modal/modal';
 
@@ -15,7 +15,7 @@ import CustomModal from '../modal/modal';
 // tidy up
 // add varying tabs
 
-const BrewScreen: () => React$Node = props => {
+const ItemScreen: () => React$Node = props => {
   const [data, setData] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(8);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -24,6 +24,8 @@ const BrewScreen: () => React$Node = props => {
     type: 'ABV_ASCENDING',
     data: [],
   });
+  const [shake, setShake] = React.useState(null);
+  const refExample = React.useRef('ABV_ASCENDING');
   const {searchParams} = props;
 
   React.useEffect(() => {
@@ -43,8 +45,6 @@ const BrewScreen: () => React$Node = props => {
           if (response.status === 200) {
             const responseJSON = await response.json();
             if (responseJSON.length) {
-              // console.log(responseJSON);
-              // beerArray.push(responseJSON);
               for (let item of responseJSON) {
                 beerArray.push(item);
               }
@@ -62,54 +62,34 @@ const BrewScreen: () => React$Node = props => {
         }
       }
       const beers = await getInitialBeer(counter); //collect all beer from API
-      setData(currentData => [...currentData, ...beerArray]);
+      // setData(currentData => [...currentData, ...beerArray]);
+      setData(beerArray);
     }
     fetchBeer();
-  }, [props, searchParams]);
+  }, [searchParams]);
 
   const eventListener = React.useCallback(() => {
     console.log('shaking');
-    switch (sortedData.type) {
+    switch (refExample.current) {
       case 'ABV_ASCENDING': {
-        const sortedArray = [].concat(data).sort((a, b) => {
-          return a.abv - b.abv;
-        });
-        const sort = {type: 'ABV_DESCENDING', data: sortedArray};
-        setSortedData(sort);
+        refExample.current = 'ABV_DESCENDING';
         break;
       }
       case 'ABV_DESCENDING': {
-        const sortedArray = [].concat(data).sort((a, b) => {
-          return b.abv - a.abv;
-        });
-        const sort = {type: 'NAME_ASCENDING', data: sortedArray};
-        setSortedData(sort);
-        break;
-      }
-      case 'NAME_ASCENDING': {
-        const sortedArray = [].concat(data).sort((a, b) => {
-          return a.name.localeCompare(b.name);
-        });
-        const sort = {type: 'NAME_DESCENDING', data: sortedArray};
-        setSortedData(sort);
-        break;
-      }
-      case 'NAME_DESCENDING': {
-        const sortedArray = [].concat(data).sort((a, b) => {
-          return b.name.localeCompare(a.name);
-        });
-        const sort = {type: 'ABV_ASCENDING', data: sortedArray};
-        setSortedData(sort);
+        refExample.current = 'ABV_ASCENDING';
         break;
       }
       default: {
         console.log('Undetected shake');
       }
     }
-  }, [data, sortedData.type]);
-
+    setShake(refExample.current);
+  }, []);
   React.useEffect(() => {
     RNShake.addEventListener('ShakeEvent', eventListener);
+    if (refExample.current === 'ABV_ASCENDING') {
+      console.log('hello');
+    }
     return () => {
       RNShake.removeEventListener('ShakeEvent', eventListener);
     };
@@ -124,16 +104,6 @@ const BrewScreen: () => React$Node = props => {
       }
       case 'down': {
         const lengthOfData = data.length;
-
-        // this was the intial idea for loading data
-
-        // if (currentPage + 18 > lengthOfData) {
-        //   const newBeers = await getBeers(APIpage + 1, searchParams); // needs to check if any more beers available
-        //   if (newBeers) {
-        //     setData(currentData => [...currentData, ...newBeers]);
-        //     setAPIpage(APIpage + 1);
-        //   }
-        // }
         const newPage = increasePagination(currentPage, lengthOfData);
         setCurrentPage(newPage);
         break;
@@ -151,16 +121,59 @@ const BrewScreen: () => React$Node = props => {
   function handleModalClose() {
     setIsModalVisible(!isModalVisible);
   }
+
+  function sortArr(sort) {
+    if (sort === 'ABV_ASCENDING') {
+      console.log(sort);
+      const sortedArray = [].concat(data).sort((a, b) => {
+        return a.abv - b.abv;
+      });
+      return sortedArray;
+    }
+    if (sort === 'ABV_DESCENDING') {
+      console.log(sort);
+      const sortedArray = [].concat(data).sort((a, b) => {
+        return b.abv - a.abv;
+      });
+      return sortedArray;
+    }
+    if (sort === 'NAME_ASCENDING') {
+      const sortedArray = [].concat(data).sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
+      return sortedArray;
+    }
+    if (sort === 'NAME_DESCENDING') {
+      const sortedArray = [].concat(data).sort((a, b) => {
+        return b.name.localeCompare(a.name);
+      });
+      return sortedArray;
+    }
+  }
   let getItems;
   if (data.length) {
-    const renderRequirements = {
-      currentPage, //
-      data: sortedData.data,
-      styles,
-      handleClick,
-      screenType: props.searchParams, // used to prevent duplicate keys
-    };
-    getItems = renderItems(renderRequirements);
+    if (shake) {
+      console.log('hello');
+      const renderRequirements = {
+        currentPage, //
+        data: sortArr(shake),
+        // data: sortedData.data,
+        styles,
+        handleClick,
+        screenType: props.searchParams, // used to prevent duplicate keys
+      };
+      getItems = renderItems(renderRequirements);
+    } else {
+      const renderRequirements = {
+        currentPage, //
+        // data: ,
+        data,
+        styles,
+        handleClick,
+        screenType: props.searchParams, // used to prevent duplicate keys
+      };
+      getItems = renderItems(renderRequirements);
+    }
   } else {
     getItems = <Text>Loading...</Text>;
   }
@@ -174,6 +187,7 @@ const BrewScreen: () => React$Node = props => {
       />
     );
   }
+  console.log(shake);
   return (
     <>
       <SafeAreaView>
@@ -228,4 +242,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default BrewScreen;
+export default ItemScreen;
