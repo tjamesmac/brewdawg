@@ -29,7 +29,7 @@ export function decreasePagination(currentPage) {
 }
 
 export function renderItems(itemRequirements) {
-  const {currentPage, data, styles, handleClick} = itemRequirements;
+  const {currentPage, data, styles, handleClick, screen} = itemRequirements;
   const pageRange = data.slice(currentPage - 8, currentPage + 1);
 
   const items = pageRange.map((item, index) => {
@@ -41,7 +41,7 @@ export function renderItems(itemRequirements) {
     return (
       <TouchableOpacity
         onPress={() => handleClick(item.id)}
-        key={item.id}
+        key={item.id + ` ${screen}`}
         style={styles.beer}>
         <View style={styles.imageContainer}>
           <Image style={styles.beerImage} source={{uri: imageURL}} />
@@ -52,4 +52,30 @@ export function renderItems(itemRequirements) {
     );
   });
   return items;
+}
+
+export async function getBeers(index, searchParams) {
+  try {
+    let URL;
+    if (searchParams === 'all') {
+      URL = `https://api.punkapi.com/v2/beers?page=${index}&per_page=71`;
+    } else {
+      URL = `https://api.punkapi.com/v2/beers?page=${index}&per_page=71&food=${searchParams}`;
+    }
+    const getData = await fetch(URL);
+    const response = await getData;
+    if (response.status === 200) {
+      const responseJSON = await response.json();
+      if (responseJSON.length) {
+        return responseJSON;
+        // setData(currentData => [...currentData, ...responseJSON]);
+      } else {
+        console.log('i am not returning anything');
+      }
+    } else {
+      console.error('data not returned');
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
