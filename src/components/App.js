@@ -17,7 +17,7 @@ function App() {
   return (
     <View style={styles.app}>
       <Head />
-      <NavigationContainer style={styles.navContainer} />
+      <NavigationContainer style={styles.navContainer} screenProps={'hello'} />
     </View>
   );
 }
