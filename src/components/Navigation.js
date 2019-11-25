@@ -1,9 +1,6 @@
 import React from 'react';
 import {View, Text} from 'react-native';
-import {
-  createMaterialTopTabNavigator,
-  MaterialTopTabBar,
-} from 'react-navigation-tabs';
+import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 /*
  Primary navigation
 */
@@ -18,7 +15,6 @@ import Items from './itemScreen/itemScreen';
 const tabBarOptions = {
   style: {
     backgroundColor: '#e60000',
-    // borderRadius: 20,
     color: 'black',
   },
   labelStyle: {
@@ -41,12 +37,10 @@ const secondaryTabBarOptions = {
     backgroundColor: '#333',
   },
   indicatorStyle: {
-    // height: '100%',
     backgroundColor: '#333',
     borderRadius: 5,
   },
   tabStyle: {
-    // backgroundColor: 'red',
     borderRadius: 10,
     justifyContent: 'center',
   },
@@ -54,13 +48,12 @@ const secondaryTabBarOptions = {
 
 const SecondaryNavigator = createMaterialTopTabNavigator(
   {
-    All: Items,
-    // Pizza: Items,
-    // Steak: Items,
+    All: {screen: props => <Items searchParams={'all'} />},
+    Pizza: {screen: props => <Items searchParams={'pizza'} />},
+    Steak: {screen: props => <Items searchParams={'steak'} />},
   },
   {
     tabBarOptions: secondaryTabBarOptions,
-    // tabBarComponent: props => <Tabs {...props} />,
   },
 );
 const MainNavigator = createMaterialTopTabNavigator(
@@ -74,19 +67,5 @@ const MainNavigator = createMaterialTopTabNavigator(
     tabBarOptions,
   },
 );
-
-const Tabs = props => {
-  console.log(props);
-  const {routes} = props.navigation.state;
-  const tab = routes.map(item => {
-    return (
-      <View>
-        <Text>{item.routeName}</Text>
-      </View>
-    );
-  });
-
-  return <>{tab}</>;
-};
 
 export default MainNavigator;
