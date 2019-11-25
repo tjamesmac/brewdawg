@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
+
 export function increasePagination(currentPage, lengthOfData) {
   const page = currentPage;
   const itemsPerPage = 9;
@@ -29,15 +23,16 @@ export function decreasePagination(currentPage) {
 }
 
 export function renderItems(itemRequirements) {
-  const {currentPage, data, styles, handleClick, screenType} = itemRequirements;
+  const {currentPage, data, styles, handleClick} = itemRequirements;
   const pageRange = data.slice(currentPage - 8, currentPage + 1);
 
   const items = pageRange.map((item, index) => {
     let imageURL = item.image_url;
-    const placeHolder = 'https://images.punkapi.com/v2/keg.png';
+    const placeHolder = 'https://images.punkapi.com/v2/keg.png'; // generic placeholder for null
     if (imageURL === null) {
       imageURL = placeHolder;
     }
+
     return (
       <TouchableOpacity
         onPress={() => handleClick(item.id)}
@@ -52,32 +47,6 @@ export function renderItems(itemRequirements) {
     );
   });
   return items;
-}
-
-export async function getBeers(index, searchParams) {
-  try {
-    let URL;
-    console.log(searchParams);
-    if (searchParams === 'all') {
-      URL = `https://api.punkapi.com/v2/beers?page=${index}&per_page=71`;
-    } else {
-      URL = `https://api.punkapi.com/v2/beers?page=${index}&per_page=71&food=${searchParams}`;
-    }
-    const getData = await fetch(URL);
-    const response = await getData;
-    if (response.status === 200) {
-      const responseJSON = await response.json();
-      if (responseJSON.length) {
-        return responseJSON;
-      } else {
-        console.log('i am not returning anything');
-      }
-    } else {
-      console.error('data not returned');
-    }
-  } catch (error) {
-    console.error(error);
-  }
 }
 
 export function sortOptions(items, sort) {
