@@ -22,35 +22,6 @@ const BrewScreen: () => React$Node = props => {
   const [modalData, setModalData] = React.useState(null);
   const {searchParamaters} = props;
 
-  async function onSwipePerformed(action) {
-    switch (action) {
-      case 'up': {
-        console.log('up');
-        const newPage = decreasePagination(currentPage);
-        setCurrentPage(newPage);
-        break;
-      }
-      case 'down': {
-        const lengthOfData = data.length;
-        if (currentPage + 18 > lengthOfData) {
-          // possibly stop this from firing at some point
-          const newBeers = await getBeers(APIpage + 1, searchParamaters);
-          if (newBeers) {
-            console.log(newBeers);
-            setData(currentData => [...currentData, ...newBeers]);
-            setAPIpage(APIpage + 1);
-          }
-        }
-        const newPage = increasePagination(currentPage, lengthOfData);
-        setCurrentPage(newPage);
-        break;
-      }
-      default: {
-        console.log('Undetected action');
-      }
-    }
-  }
-
   React.useEffect(() => {
     async function fetchBeer() {
       async function getInitialBeer(index) {
@@ -85,6 +56,34 @@ const BrewScreen: () => React$Node = props => {
     }
     fetchBeer();
   }, [props]);
+
+  async function onSwipePerformed(action) {
+    switch (action) {
+      case 'up': {
+        console.log('up');
+        const newPage = decreasePagination(currentPage);
+        setCurrentPage(newPage);
+        break;
+      }
+      case 'down': {
+        const lengthOfData = data.length;
+        if (currentPage + 18 > lengthOfData) {
+          const newBeers = await getBeers(APIpage + 1, searchParamaters); // needs to check if any more beers available
+          if (newBeers) {
+            setData(currentData => [...currentData, ...newBeers]);
+            setAPIpage(APIpage + 1);
+          }
+        }
+        const newPage = increasePagination(currentPage, lengthOfData);
+        setCurrentPage(newPage);
+        break;
+      }
+      default: {
+        console.log('Undetected action');
+      }
+    }
+  }
+
   function handleClick(id) {
     const targetItem = data[id - 1];
     setModalData(targetItem);
@@ -97,11 +96,11 @@ const BrewScreen: () => React$Node = props => {
   let getItems;
   if (data.length) {
     const renderRequirements = {
-      currentPage,
+      currentPage, //
       data,
       styles,
       handleClick,
-      screen: props.searchParams,
+      screenType: props.searchParams, // used to prevent duplicate keys
     };
     getItems = renderItems(renderRequirements);
   }
