@@ -1,5 +1,6 @@
 import React from 'react';
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {SafeAreaView, StyleSheet, View, Text} from 'react-native';
+import RNShake from 'react-native-shake';
 import SwipeGesture from '../swipe/swipeGesture';
 import {
   increasePagination,
@@ -16,6 +17,10 @@ import CustomModal from '../modal/modal';
 
 const BrewScreen: () => React$Node = props => {
   const [data, setData] = React.useState([]);
+  const [sortedData, setSortedData] = React.useState({
+    type: 'ABV_ASCENDING',
+    data: [],
+  });
   const [currentPage, setCurrentPage] = React.useState(8);
   const [APIpage, setAPIpage] = React.useState(1);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
@@ -24,25 +29,31 @@ const BrewScreen: () => React$Node = props => {
 
   React.useEffect(() => {
     async function fetchBeer() {
+      const beerArray = [];
+      let counter = 1;
       async function getInitialBeer(index) {
         try {
-          // const {searchParams} = props;
-          console.log(searchParams);
           let URL;
           if (searchParams === 'all') {
-            URL = `https://api.punkapi.com/v2/beers?page=${index}&per_page=71`;
+            URL = `https://api.punkapi.com/v2/beers?page=${counter}&per_page=71`;
           } else {
-            URL = `https://api.punkapi.com/v2/beers?page=${index}&per_page=71&food=${searchParams}`;
+            URL = `https://api.punkapi.com/v2/beers?page=${counter}&per_page=71&food=${searchParams}`;
           }
           const getData = await fetch(URL);
           const response = await getData;
           if (response.status === 200) {
             const responseJSON = await response.json();
             if (responseJSON.length) {
-              console.log(responseJSON);
-              return responseJSON;
+              // console.log(responseJSON);
+              // beerArray.push(responseJSON);
+              for (let item of responseJSON) {
+                beerArray.push(item);
+              }
+              counter++;
+              return getInitialBeer();
             } else {
               console.log('i am not returning anything');
+              return false;
             }
           } else {
             console.error('data not returned');
@@ -51,27 +62,71 @@ const BrewScreen: () => React$Node = props => {
           console.error(error);
         }
       }
-      const beers = await getInitialBeer(1);
-      setData(currentData => [...currentData, ...beers]);
+      const beers = await getInitialBeer(counter); //collect all beer from API
+      setData(currentData => [...currentData, ...beerArray]);
     }
     fetchBeer();
   }, [props, searchParams]);
 
+  const eventListener = React.useCallback(() => {
+    console.log('shaking');
+    switch (sortedData.type) {
+      case 'ABV_ASCENDING': {
+        const sortedArray = [].concat(data).sort((a, b) => {
+          return a.abv - b.abv;
+        });
+        const sort = {type: 'ABV_DESCENDING', data: sortedArray};
+        setSortedData(sort);
+        break;
+      }
+      case 'ABV_DESCENDING': {
+        const sortedArray = [].concat(data).sort((a, b) => {
+          return b.abv - a.abv;
+        });
+        const sort = {type: 'NAME_ASCENDING', data: sortedArray};
+        setSortedData(sort);
+        break;
+      }
+      case 'NAME_ASCENDING': {
+        const sortedArray = [].concat(data).sort((a, b) => {
+          return a.name.localeCompare(b.name);
+        });
+        const sort = {type: 'NAME_DESCENDING', data: sortedArray};
+        setSortedData(sort);
+        break;
+      }
+      case 'NAME_DESCENDING': {
+        const sortedArray = [].concat(data).sort((a, b) => {
+          return b.name.localeCompare(a.name);
+        });
+        const sort = {type: 'ABV_ASCENDING', data: sortedArray};
+        setSortedData(sort);
+        break;
+      }
+      default: {
+        console.log('Undetected shake');
+      }
+    }
+  }, [data, sortedData.type]);
+
+  React.useEffect(() => {
+    RNShake.addEventListener('ShakeEvent', eventListener);
+    return () => {
+      RNShake.removeEventListener('ShakeEvent', eventListener);
+    };
+  }, [eventListener]);
+
   async function onSwipePerformed(action) {
     switch (action) {
       case 'up': {
-        console.log('up');
         const newPage = decreasePagination(currentPage);
         setCurrentPage(newPage);
         break;
       }
       case 'down': {
         const lengthOfData = data.length;
-        console.log(lengthOfData);
         if (currentPage + 18 > lengthOfData) {
-          console.log(APIpage);
           const newBeers = await getBeers(APIpage + 1, searchParams); // needs to check if any more beers available
-          console.log(newBeers, 'these should be the new beers');
           if (newBeers) {
             setData(currentData => [...currentData, ...newBeers]);
             setAPIpage(APIpage + 1);
@@ -98,14 +153,17 @@ const BrewScreen: () => React$Node = props => {
   }
   let getItems;
   if (data.length) {
+    // if (sortedData.data.length) {
     const renderRequirements = {
       currentPage, //
-      data,
+      data: sortedData.data,
       styles,
       handleClick,
       screenType: props.searchParams, // used to prevent duplicate keys
     };
     getItems = renderItems(renderRequirements);
+  } else {
+    getItems = <Text>Loading...</Text>;
   }
   let renderModal;
   if (modalData) {
