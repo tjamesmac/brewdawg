@@ -80,63 +80,31 @@ export async function getBeers(index, searchParams) {
   }
 }
 
-//  const eventListener = React.useCallback(() => {
-//     console.log('shaking');
-//     switch (refExample.current) {
-//       case 'ABV_ASCENDING': {
-// const sortedArray = [].concat(data).sort((a, b) => {
-//   return a.abv - b.abv;
-// });
-//         const sort = {type: 'ABV_DESCENDING', data: sortedArray};
-//         refExample.current = 'ABV_DESCENDING';
-//         // setSortedData(sort);
-//         console.log('up');
-//         break;
-//       }
-//       case 'ABV_DESCENDING': {
-//         const sortedArray = [].concat(data).sort((a, b) => {
-//           return b.abv - a.abv;
-//         });
-//         const sort = {type: 'NAME_ASCENDING', data: sortedArray};
-//         refExample.current = 'NAME_ASCENDING';
-//         // setSortedData(sort);
-//         console.log('down');
-//         break;
-//       }
-//       case 'NAME_ASCENDING': {
-//         const sortedArray = [].concat(data).sort((a, b) => {
-//           return a.name.localeCompare(b.name);
-//         });
-//         const sort = {type: 'NAME_DESCENDING', data: sortedArray};
-//         refExample.current = 'NAME_DESCENDING';
-//         // setSortedData(sort);
-//         console.log('yes');
-//         break;
-//       }
-//       case 'NAME_DESCENDING': {
-// const sortedArray = [].concat(data).sort((a, b) => {
-//   return b.name.localeCompare(a.name);
-// });
-//         const sort = {type: 'ABV_ASCENDING', data: sortedArray};
-//         refExample.current = 'ABV_ASCENDING';
-//         console.log('no');
-//         break;
-//       }
-//       default: {
-//         console.log('Undetected shake');
-//       }
-//     }
-//   }, [data]);
-
-//   React.useEffect(() => {
-//     RNShake.addEventListener('ShakeEvent', eventListener);
-//     console.log(refExample.current, 'this is the ref inside the event');
-//     if (refExample.current === 'ABV_ASCENDING') {
-//       console.log('I AM ASCENDING');
-//     } else {
-//       console.log(refExample, 'help');
-//     }
-//     return () => {
-//       RNShake.removeEventListener('ShakeEvent', eventListener);
-//     };
-//   }, [eventListener]);
+export function sortOptions(items, sort) {
+  switch (sort) {
+    case 'ABV_ASCENDING': {
+      const sortedArray = [].concat(items).sort((a, b) => {
+        return a.abv - b.abv;
+      });
+      return sortedArray;
+    }
+    case 'ABV_DESCENDING': {
+      const sortedArray = [].concat(items).sort((a, b) => {
+        return b.abv - a.abv;
+      });
+      return sortedArray;
+    }
+    case 'NAME_ASCENDING': {
+      const sortedArray = [].concat(items).sort((a, b) => {
+        return a.name.localeCompare(b.name);
+      });
+      return sortedArray;
+    }
+    case 'NAME_DESCENDING': {
+      const sortedArray = [].concat(items).sort((a, b) => {
+        return b.name.localeCompare(a.name);
+      });
+      return sortedArray;
+    }
+  }
+}
