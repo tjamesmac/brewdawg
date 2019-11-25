@@ -20,13 +20,13 @@ const BrewScreen: () => React$Node = props => {
   const [APIpage, setAPIpage] = React.useState(1);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [modalData, setModalData] = React.useState(null);
-  const {searchParamaters} = props;
+  const {searchParams} = props;
 
   React.useEffect(() => {
     async function fetchBeer() {
       async function getInitialBeer(index) {
         try {
-          const {searchParams} = props;
+          // const {searchParams} = props;
           console.log(searchParams);
           let URL;
           if (searchParams === 'all') {
@@ -55,7 +55,7 @@ const BrewScreen: () => React$Node = props => {
       setData(currentData => [...currentData, ...beers]);
     }
     fetchBeer();
-  }, [props]);
+  }, [props, searchParams]);
 
   async function onSwipePerformed(action) {
     switch (action) {
@@ -67,8 +67,11 @@ const BrewScreen: () => React$Node = props => {
       }
       case 'down': {
         const lengthOfData = data.length;
+        console.log(lengthOfData);
         if (currentPage + 18 > lengthOfData) {
-          const newBeers = await getBeers(APIpage + 1, searchParamaters); // needs to check if any more beers available
+          console.log(APIpage);
+          const newBeers = await getBeers(APIpage + 1, searchParams); // needs to check if any more beers available
+          console.log(newBeers, 'these should be the new beers');
           if (newBeers) {
             setData(currentData => [...currentData, ...newBeers]);
             setAPIpage(APIpage + 1);
@@ -85,8 +88,8 @@ const BrewScreen: () => React$Node = props => {
   }
 
   function handleClick(id) {
-    const targetItem = data[id - 1];
-    setModalData(targetItem);
+    const targetItem = data.filter(item => item.id === id);
+    setModalData(targetItem[0]);
     setIsModalVisible(true);
     console.log('click');
   }
