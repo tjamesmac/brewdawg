@@ -15,6 +15,7 @@ import {
   decreasePagination,
   renderItems,
 } from './itemScreen.helpers';
+import CustomModal from '../modal/modal';
 
 // TODO: Add up down/swipe gesture
 // Add modal
@@ -82,6 +83,9 @@ const BrewScreen: () => React$Node = props => {
     setIsModalVisible(true);
     console.log('click');
   }
+  function handleModalClose() {
+    setIsModalVisible(!isModalVisible);
+  }
   let getItems;
   if (data.length) {
     const renderRequirements = {
@@ -92,65 +96,15 @@ const BrewScreen: () => React$Node = props => {
     };
     getItems = renderItems(renderRequirements);
   }
-  const CustomModal = props => {
-    const {
-      name,
-      tagline,
-      abv,
-      description,
-      food_pairing,
-      image_url,
-    } = props.itemInformation;
-    console.log(image_url);
-    let imageURL = image_url;
-    const placeHolder = 'https://images.punkapi.com/v2/keg.png';
-    const food = food_pairing.map((item, index) => {
-      return (
-        <Text style={styles.itemText} key={index + ' food'}>
-          {item}
-        </Text>
-      );
-    });
-    if (image_url === null) {
-      imageURL = placeHolder;
-    }
-    console.log(food_pairing, 'null check');
-    return (
-      <Modal animationType="slide" transparent={true} visible={isModalVisible}>
-        <View style={styles.modalContainer}>
-          <View>
-            <View style={styles.modalBody}>
-              <TouchableHighlight
-                style={styles.modalClose}
-                onPress={() => {
-                  setIsModalVisible(!isModalVisible);
-                }}>
-                <Text style={styles.modalCloseText}>CLOSE</Text>
-              </TouchableHighlight>
-              <View style={styles.itemBody}>
-                <View style={styles.itemInfo}>
-                  <ScrollView>
-                    <Text style={styles.itemHeading}>{name}</Text>
-                    <Text style={styles.itemSubHeading}>{tagline}</Text>
-                    <Text style={styles.itemTextsmaller}>ABV: {abv}</Text>
-                    <Text style={styles.itemDescription}>{description}</Text>
-                    <Text style={styles.itemSubHeading}>Pairs with:</Text>
-                    {food}
-                  </ScrollView>
-                </View>
-                <View style={styles.itemImageContainer}>
-                  <Image style={styles.itemImage} source={{uri: imageURL}} />
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      </Modal>
-    );
-  };
   let renderModal;
   if (modalData) {
-    renderModal = <CustomModal itemInformation={modalData} />;
+    renderModal = (
+      <CustomModal
+        itemInformation={modalData}
+        visible={isModalVisible}
+        handleClose={handleModalClose}
+      />
+    );
   }
   return (
     <>
