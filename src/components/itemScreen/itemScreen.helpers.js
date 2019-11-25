@@ -41,7 +41,7 @@ export function renderItems(itemRequirements) {
     return (
       <TouchableOpacity
         onPress={() => handleClick(item.id)}
-        key={item.id + ` ${screenType}`}
+        key={item.id}
         style={styles.beer}>
         <View style={styles.imageContainer}>
           <Image style={styles.beerImage} source={{uri: imageURL}} />
@@ -57,6 +57,7 @@ export function renderItems(itemRequirements) {
 export async function getBeers(index, searchParams) {
   try {
     let URL;
+    console.log(searchParams);
     if (searchParams === 'all') {
       URL = `https://api.punkapi.com/v2/beers?page=${index}&per_page=71`;
     } else {
@@ -67,6 +68,7 @@ export async function getBeers(index, searchParams) {
     if (response.status === 200) {
       const responseJSON = await response.json();
       if (responseJSON.length) {
+        console.log(responseJSON, 'this is the response');
         return responseJSON;
         // setData(currentData => [...currentData, ...responseJSON]);
       } else {
