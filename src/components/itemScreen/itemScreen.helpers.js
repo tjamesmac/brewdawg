@@ -68,9 +68,7 @@ export async function getBeers(index, searchParams) {
     if (response.status === 200) {
       const responseJSON = await response.json();
       if (responseJSON.length) {
-        console.log(responseJSON, 'this is the response');
         return responseJSON;
-        // setData(currentData => [...currentData, ...responseJSON]);
       } else {
         console.log('i am not returning anything');
       }
