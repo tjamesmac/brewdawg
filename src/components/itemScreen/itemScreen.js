@@ -1,24 +1,15 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  View,
-  Modal,
-  Text,
-  TouchableHighlight,
-  Image,
-  ScrollView,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import SwipeGesture from '../swipe/swipeGesture';
 import {
   increasePagination,
   decreasePagination,
   renderItems,
+  getBeers,
 } from './itemScreen.helpers';
 import CustomModal from '../modal/modal';
 
 // TODO: Add up down/swipe gesture
-// Add modal
 // colour navigation
 // tidy up
 // add varying tabs
@@ -29,8 +20,9 @@ const BrewScreen: () => React$Node = props => {
   const [APIpage, setAPIpage] = React.useState(1);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [modalData, setModalData] = React.useState(null);
+  const {searchParamaters} = props;
 
-  function onSwipePerformed(action) {
+  async function onSwipePerformed(action) {
     switch (action) {
       case 'up': {
         console.log('up');
@@ -42,8 +34,12 @@ const BrewScreen: () => React$Node = props => {
         const lengthOfData = data.length;
         if (currentPage + 18 > lengthOfData) {
           // possibly stop this from firing at some point
-          getBeers(APIpage + 1);
-          setAPIpage(APIpage + 1);
+          const newBeers = await getBeers(APIpage + 1, searchParamaters);
+          if (newBeers) {
+            console.log(newBeers);
+            setData(currentData => [...currentData, ...newBeers]);
+            setAPIpage(APIpage + 1);
+          }
         }
         const newPage = increasePagination(currentPage, lengthOfData);
         setCurrentPage(newPage);
@@ -54,29 +50,41 @@ const BrewScreen: () => React$Node = props => {
       }
     }
   }
-  async function getBeers(index) {
-    try {
-      const URL = `https://api.punkapi.com/v2/beers?page=${index}&per_page=71`;
-      const getData = await fetch(URL);
-      const response = await getData;
-      if (response.status === 200) {
-        const responseJSON = await response.json();
-        if (responseJSON.length) {
-          setData(currentData => [...currentData, ...responseJSON]);
-        } else {
-          console.log('i am not returning anything');
-        }
-      } else {
-        console.error('data not returned');
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  }
 
   React.useEffect(() => {
-    getBeers(1);
-  }, []);
+    async function fetchBeer() {
+      async function getInitialBeer(index) {
+        try {
+          const {searchParams} = props;
+          console.log(searchParams);
+          let URL;
+          if (searchParams === 'all') {
+            URL = `https://api.punkapi.com/v2/beers?page=${index}&per_page=71`;
+          } else {
+            URL = `https://api.punkapi.com/v2/beers?page=${index}&per_page=71&food=${searchParams}`;
+          }
+          const getData = await fetch(URL);
+          const response = await getData;
+          if (response.status === 200) {
+            const responseJSON = await response.json();
+            if (responseJSON.length) {
+              console.log(responseJSON);
+              return responseJSON;
+            } else {
+              console.log('i am not returning anything');
+            }
+          } else {
+            console.error('data not returned');
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+      const beers = await getInitialBeer(1);
+      setData(currentData => [...currentData, ...beers]);
+    }
+    fetchBeer();
+  }, [props]);
   function handleClick(id) {
     const targetItem = data[id - 1];
     setModalData(targetItem);
@@ -93,6 +101,7 @@ const BrewScreen: () => React$Node = props => {
       data,
       styles,
       handleClick,
+      screen: props.searchParams,
     };
     getItems = renderItems(renderRequirements);
   }
