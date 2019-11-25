@@ -64,10 +64,6 @@ const CustomModal = props => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    height: '100%',
-  },
   modalContainer: {
     backgroundColor: 'rgba(100,100,100, 0.5)',
     padding: 35,
@@ -80,10 +76,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 20,
     flexGrow: 1,
-    marginTop: 50,
-  },
-  scrollViewBody: {
-    alignSelf: 'baseline',
     marginTop: 50,
   },
   modalClose: {
@@ -149,40 +141,6 @@ const styles = StyleSheet.create({
   },
   itemText: {
     color: 'white',
-  },
-  swipesGestureContainer: {
-    // flex: 1,
-    // width: '100%',
-    height: '100%',
-    // flexDirection: 'row',
-    // flexWrap: 'wrap',
-    alignItems: 'stretch',
-  },
-  beerContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    width: '100%',
-    // marginTop: 450,
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-    paddingRight: 15,
-  },
-  imageContainer: {
-    borderColor: 'black',
-    borderWidth: 1,
-    borderRadius: 15,
-    padding: 10,
-  },
-  beerImage: {
-    width: 100,
-    height: 125,
-    resizeMode: 'contain',
-  },
-  beer: {
-    alignItems: 'center',
-    width: '30%',
-    marginTop: 20,
   },
 });
 
