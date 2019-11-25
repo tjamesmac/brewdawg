@@ -7,23 +7,15 @@ import {
   increasePagination,
   decreasePagination,
   renderItems,
+  sortOptions,
 } from './itemScreen.helpers';
 import CustomModal from '../modal/modal';
-
-// TODO: Add up down/swipe gesture
-// colour navigation
-// tidy up
-// add varying tabs
 
 const ItemScreen: () => React$Node = props => {
   const [data, setData] = React.useState([]);
   const [currentPage, setCurrentPage] = React.useState(8);
   const [isModalVisible, setIsModalVisible] = React.useState(false);
   const [modalData, setModalData] = React.useState(null);
-  const [sortedData, setSortedData] = React.useState({
-    type: 'ABV_ASCENDING',
-    data: [],
-  });
   const [shake, setShake] = React.useState(null);
   const refExample = React.useRef('ABV_ASCENDING');
   const {searchParams} = props;
@@ -31,7 +23,7 @@ const ItemScreen: () => React$Node = props => {
   React.useEffect(() => {
     async function fetchBeer() {
       const beerArray = [];
-      let counter = 1;
+      let counter = 1; // needed to add pages to API call
       async function getInitialBeer(index) {
         try {
           let URL;
@@ -62,7 +54,6 @@ const ItemScreen: () => React$Node = props => {
         }
       }
       const beers = await getInitialBeer(counter); //collect all beer from API
-      // setData(currentData => [...currentData, ...beerArray]);
       setData(beerArray);
     }
     fetchBeer();
@@ -76,6 +67,14 @@ const ItemScreen: () => React$Node = props => {
         break;
       }
       case 'ABV_DESCENDING': {
+        refExample.current = 'NAME_ASCENDING';
+        break;
+      }
+      case 'NAME_ASCENDING': {
+        refExample.current = 'NAME_DESCENDING';
+        break;
+      }
+      case 'NAME_DESCENDING': {
         refExample.current = 'ABV_ASCENDING';
         break;
       }
@@ -87,9 +86,6 @@ const ItemScreen: () => React$Node = props => {
   }, []);
   React.useEffect(() => {
     RNShake.addEventListener('ShakeEvent', eventListener);
-    if (refExample.current === 'ABV_ASCENDING') {
-      console.log('hello');
-    }
     return () => {
       RNShake.removeEventListener('ShakeEvent', eventListener);
     };
@@ -121,43 +117,12 @@ const ItemScreen: () => React$Node = props => {
   function handleModalClose() {
     setIsModalVisible(!isModalVisible);
   }
-
-  function sortArr(sort) {
-    if (sort === 'ABV_ASCENDING') {
-      console.log(sort);
-      const sortedArray = [].concat(data).sort((a, b) => {
-        return a.abv - b.abv;
-      });
-      return sortedArray;
-    }
-    if (sort === 'ABV_DESCENDING') {
-      console.log(sort);
-      const sortedArray = [].concat(data).sort((a, b) => {
-        return b.abv - a.abv;
-      });
-      return sortedArray;
-    }
-    if (sort === 'NAME_ASCENDING') {
-      const sortedArray = [].concat(data).sort((a, b) => {
-        return a.name.localeCompare(b.name);
-      });
-      return sortedArray;
-    }
-    if (sort === 'NAME_DESCENDING') {
-      const sortedArray = [].concat(data).sort((a, b) => {
-        return b.name.localeCompare(a.name);
-      });
-      return sortedArray;
-    }
-  }
   let getItems;
   if (data.length) {
     if (shake) {
-      console.log('hello');
       const renderRequirements = {
         currentPage, //
-        data: sortArr(shake),
-        // data: sortedData.data,
+        data: sortOptions(data, shake),
         styles,
         handleClick,
         screenType: props.searchParams, // used to prevent duplicate keys
@@ -165,8 +130,7 @@ const ItemScreen: () => React$Node = props => {
       getItems = renderItems(renderRequirements);
     } else {
       const renderRequirements = {
-        currentPage, //
-        // data: ,
+        currentPage,
         data,
         styles,
         handleClick,
@@ -175,7 +139,11 @@ const ItemScreen: () => React$Node = props => {
       getItems = renderItems(renderRequirements);
     }
   } else {
-    getItems = <Text>Loading...</Text>;
+    getItems = (
+      <View style={styles.loading}>
+        <Text>Loading...</Text>
+      </View>
+    );
   }
   let renderModal;
   if (modalData) {
@@ -210,6 +178,11 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     height: '100%',
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   swipesGestureContainer: {
     height: '100%',
