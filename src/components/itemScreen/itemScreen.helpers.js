@@ -29,7 +29,7 @@ export function decreasePagination(currentPage) {
 }
 
 export function renderItems(itemRequirements) {
-  const {currentPage, data, styles, handleClick, screen} = itemRequirements;
+  const {currentPage, data, styles, handleClick, screenType} = itemRequirements;
   const pageRange = data.slice(currentPage - 8, currentPage + 1);
 
   const items = pageRange.map((item, index) => {
@@ -41,7 +41,7 @@ export function renderItems(itemRequirements) {
     return (
       <TouchableOpacity
         onPress={() => handleClick(item.id)}
-        key={item.id + ` ${screen}`}
+        key={item.id + ` ${screenType}`}
         style={styles.beer}>
         <View style={styles.imageContainer}>
           <Image style={styles.beerImage} source={{uri: imageURL}} />
