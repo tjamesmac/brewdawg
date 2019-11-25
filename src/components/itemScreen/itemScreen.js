@@ -17,14 +17,13 @@ import CustomModal from '../modal/modal';
 
 const BrewScreen: () => React$Node = props => {
   const [data, setData] = React.useState([]);
+  const [currentPage, setCurrentPage] = React.useState(8);
+  const [isModalVisible, setIsModalVisible] = React.useState(false);
+  const [modalData, setModalData] = React.useState(null);
   const [sortedData, setSortedData] = React.useState({
     type: 'ABV_ASCENDING',
     data: [],
   });
-  const [currentPage, setCurrentPage] = React.useState(8);
-  const [APIpage, setAPIpage] = React.useState(1);
-  const [isModalVisible, setIsModalVisible] = React.useState(false);
-  const [modalData, setModalData] = React.useState(null);
   const {searchParams} = props;
 
   React.useEffect(() => {
@@ -125,13 +124,16 @@ const BrewScreen: () => React$Node = props => {
       }
       case 'down': {
         const lengthOfData = data.length;
-        if (currentPage + 18 > lengthOfData) {
-          const newBeers = await getBeers(APIpage + 1, searchParams); // needs to check if any more beers available
-          if (newBeers) {
-            setData(currentData => [...currentData, ...newBeers]);
-            setAPIpage(APIpage + 1);
-          }
-        }
+
+        // this was the intial idea for loading data
+
+        // if (currentPage + 18 > lengthOfData) {
+        //   const newBeers = await getBeers(APIpage + 1, searchParams); // needs to check if any more beers available
+        //   if (newBeers) {
+        //     setData(currentData => [...currentData, ...newBeers]);
+        //     setAPIpage(APIpage + 1);
+        //   }
+        // }
         const newPage = increasePagination(currentPage, lengthOfData);
         setCurrentPage(newPage);
         break;
@@ -141,19 +143,16 @@ const BrewScreen: () => React$Node = props => {
       }
     }
   }
-
   function handleClick(id) {
     const targetItem = data.filter(item => item.id === id);
     setModalData(targetItem[0]);
     setIsModalVisible(true);
-    console.log('click');
   }
   function handleModalClose() {
     setIsModalVisible(!isModalVisible);
   }
   let getItems;
   if (data.length) {
-    // if (sortedData.data.length) {
     const renderRequirements = {
       currentPage, //
       data: sortedData.data,
