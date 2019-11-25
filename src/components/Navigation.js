@@ -1,5 +1,4 @@
 import React from 'react';
-import {View, Text} from 'react-native';
 import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 /*
  Primary navigation
@@ -10,6 +9,7 @@ import SearchScreen from './searchScreen/searchScreen';
 /*
  Secondary navigation
 */
+
 import Items from './itemScreen/itemScreen';
 
 const tabBarOptions = {
@@ -18,13 +18,15 @@ const tabBarOptions = {
     color: 'black',
   },
   labelStyle: {
-    color: 'black',
+    color: 'white',
   },
   tabStyle: {
     borderRadius: 25,
   },
   indicatorStyle: {
+    marginLeft: 12,
     height: '100%',
+    width: '20%',
     color: 'white',
     backgroundColor: '#333',
     borderTopRightRadius: 15,
@@ -44,6 +46,9 @@ const secondaryTabBarOptions = {
     borderRadius: 10,
     justifyContent: 'center',
   },
+  labelStyle: {
+    color: 'white',
+  },
 };
 
 const SecondaryNavigator = createMaterialTopTabNavigator(
@@ -56,6 +61,7 @@ const SecondaryNavigator = createMaterialTopTabNavigator(
     tabBarOptions: secondaryTabBarOptions,
   },
 );
+
 const MainNavigator = createMaterialTopTabNavigator(
   {
     Home: SecondaryNavigator,
