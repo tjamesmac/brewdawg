@@ -18,7 +18,7 @@ cd ios
 ```
 pod install
 ```
-### After pods are install
+### After pods are installed
 ```
 npm run ios
 ```
